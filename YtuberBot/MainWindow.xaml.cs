@@ -1,6 +1,7 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
+using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
@@ -21,14 +22,22 @@ namespace YtuberBot
             User user = new User();
             if (File.Exists("user.data"))
             {
-                using (FileStream fs = new FileStream("user.data", FileMode.Open))
+                try
                 {
+                    using (FileStream fs = new FileStream("user.data", FileMode.Open))
+                    {
 
-                    user = (User)bf.Deserialize(fs);
+                        user = (User)bf.Deserialize(fs);
+                    }
+                    Login.Text = user.email;
+                    Password.Text = user.password;
+
                 }
-                Login.Text = user.email;
-                Password.Text = user.password;
-            }
+                catch(Exception ex)
+                {
+                    MessageBox.Show("File can`t found, or stream is empty");
+                }
+                }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
