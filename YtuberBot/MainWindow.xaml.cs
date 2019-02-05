@@ -81,15 +81,16 @@ namespace YtuberBot
             driver.Navigate().GoToUrl("https://ytuber.ru/work/view");
             var tables = driver.FindElement(className);
             By tbody = By.TagName("tbody");
-            var body = tables.FindElements(tbody); 
-            foreach ( var b in body)
+            var body = tables.FindElement(tbody); 
+            foreach ( var b in body.FindElements(By.TagName("tr")))
             {
                 By ahref = By.TagName("a");
                 var href = b.FindElement(ahref);
                 By imgTag = By.TagName("img");
                 var img = href.FindElement(imgTag);
                 img.Click();
-                
+                Thread.Sleep(1000);
+
             }
 
         }
