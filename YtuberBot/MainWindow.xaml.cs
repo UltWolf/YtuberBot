@@ -66,8 +66,9 @@ namespace YtuberBot
                 driver.FindElement(By.Id("identifierId")).SendKeys(Login.Text);
                 driver.FindElement(By.Id("identifierNext")).Click();
                 Thread.Sleep(10000);
-                driver.FindElement(inputTag).SendKeys(Password.Text);
-
+                driver.FindElements(inputTag)[1].SendKeys(Password.Text);
+                driver.FindElement(By.Id("passwordNext")).Click();
+                Thread.Sleep(10000);
             }
             else
             {
@@ -76,10 +77,12 @@ namespace YtuberBot
                 driver.FindElements(formGroup)[1].FindElement(inputTag).SendKeys(Login.Text);
                 driver.FindElements(formGroup)[2].FindElement(inputTag).Submit();
             }
+
+            driver.Navigate().GoToUrl("https://ytuber.ru/work/view");
             var tables = driver.FindElement(className);
             By tbody = By.TagName("tbody");
-            var body = tables.FindElements(tbody);
-            foreach( var b in body)
+            var body = tables.FindElements(tbody); 
+            foreach ( var b in body)
             {
                 By ahref = By.TagName("a");
                 var href = b.FindElement(ahref);
