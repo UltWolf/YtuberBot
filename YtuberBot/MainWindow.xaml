@@ -7,6 +7,14 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBox    Width="200" Height="50" Grid.Row="0" Name="Login"/>
+        <TextBox Width="200" Height="50" Grid.Row="1" Name="Password"></TextBox>
+        <CheckBox Width="30" Height="30" Grid.Row="1" Margin="540,65,223.6,45" Name="IsGoogle"></CheckBox>
+        <Button Content="start" Click="Button_Click" Width="200" Height="50" Grid.Row="2"></Button>
     </Grid>
 </Window>
