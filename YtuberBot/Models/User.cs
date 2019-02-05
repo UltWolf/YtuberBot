@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace YtuberBot.Models
 {
+    [Serializable]
     public class User
     {
         public string  email { get; set; }
