@@ -8,6 +8,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 using System.Windows;
 using YtuberBot.Models;
+using YtuberBot.Views;
 
 namespace YtuberBot
 {
@@ -46,51 +47,7 @@ namespace YtuberBot
         {
             FirefoxDriver driver = new FirefoxDriver();
             LoginInAccount(driver);
-
-            driver.Navigate().GoToUrl("https://ytuber.ru/work/view");
-            Thread.Sleep(r.Next(1, 10) * 1000);
-            if (driver.Url != "https://ytuber.ru/work/view") {
-                LoginInAccount(driver);
-            } ;
-
-            By className = By.ClassName("table-responsive");
-            var tables = driver.FindElement(className);
-            By tbody = By.TagName("tbody");
-            var body = tables.FindElement(tbody); 
-            foreach ( var b in body.FindElements(By.TagName("tr")))
-            {
-                if (b.GetAttribute("class") != "success")
-                {
-                    By ahref = By.TagName("a");
-                    var href = b.FindElement(ahref);
-                    By imgTag = By.TagName("img");
-                    var img = href.FindElement(imgTag);
-                    img.Click();
-
-                    By time = By.ClassName("time");
-
-                    var windows = driver.WindowHandles.ToList();
-                    if (windows.Count == 1)
-                    {
-                        continue;
-                    }
-                    Thread.Sleep(int.Parse(b.FindElement(time).Text) * 1000);
-                    try
-                    {
-                        driver.SwitchTo().Window(windows[1]);
-                        driver.Close();
-                    }
-                    catch (Exception ex)
-                    {
-
-                    }
-                    driver.SwitchTo().Window(windows[0]);
-                    By agree = By.ClassName("btn btn-info btn-circle");
-
-                    b.FindElement(agree).Click();
-                    Thread.Sleep(r.Next(1, 10) * 1000);
-                }
-            }
+            ManagmentView mv = new ManagmentView(driver);
         }
 
         public void LoginInAccount(FirefoxDriver driver)
@@ -140,6 +97,10 @@ namespace YtuberBot
                 driver.FindElements(formGroup)[1].FindElement(inputTag).SendKeys(Login.Text);
                 driver.FindElements(formGroup)[2].FindElement(inputTag).Submit();
             }
+            ManagmentView mw = new ManagmentView(driver);
+            mw.Show();
+            this.Close();
+           
         }
     }
 }
