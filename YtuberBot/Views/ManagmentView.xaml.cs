@@ -25,6 +25,7 @@ namespace YtuberBot.Views
         private readonly FirefoxDriver _fd;
         private readonly Random r = new Random();
         private string LikeValue = "";
+        Thread tr ;
 
         public ManagmentView(FirefoxDriver fd)
         {
@@ -35,13 +36,14 @@ namespace YtuberBot.Views
         private void Button_Click(object sender, RoutedEventArgs e)
         { 
             _fd.Navigate().GoToUrl("https://ytuber.ru/work/view");
-            Thread tr = new Thread(()=>DoTask(Watch, "view"));
-            tr.Start(); 
+            tr = new Thread(() => DoTask(Watch, "view"));
+            tr.Name = "";
+            tr.Start();
+            tr.Abort();
         }
         public void DoTask(Action<IWebElement> action,string taskUrl)
-        {
-
-            Thread.Sleep(r.Next(1, 10) * 1000);
+        {  
+            Thread.Sleep(r.Next(1, 10) * 1000); 
             By className = By.ClassName("table-responsive");
             var tables = _fd.FindElement(className);
             By tbody = By.TagName("tbody");
@@ -160,6 +162,138 @@ namespace YtuberBot.Views
             _fd.Navigate().GoToUrl("https://ytuber.ru/work/like");
             Thread tr = new Thread(() => DoTask(Like,"like"));
             tr.Start();
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            _fd.Navigate().GoToUrl("https://ytuber.ru/work/comment");
+            Thread tr = new Thread(() => DoTask(Comment, "comment"));
+            tr.Start();
+
+        }
+        private void Comment(IWebElement b)
+        {
+            try
+            {
+                By ahref = By.TagName("a");
+                var href = b.FindElement(ahref);
+                By imgTag = By.TagName("img");
+                var img = href.FindElement(imgTag);
+                var typeComment = b.FindElements(By.TagName("td"))[4].FindElement(By.TagName("span")).Text;
+                bool pasteComment = false;
+                string comment = "";
+                if (typeComment == "Позитивный")
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        comment = Positive.Text;
+                    });
+                }
+                else if (typeComment == "Негативный")
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        comment = Negative.Text;
+                    });
+                }
+                else if ((typeComment == "Произвольный") || (typeComment == "-"))
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        comment = Any.Text;
+                    });
+                }
+                else
+                {
+                    b.FindElements(By.TagName("td"))[4].FindElement(By.TagName("a")).Click();
+                    pasteComment = true;
+                }
+                img.Click();
+
+                By time = By.ClassName("time");
+
+                var windows = _fd.WindowHandles.ToList();
+
+                try
+                {
+                    _fd.SwitchTo().Window(windows[1]);
+                    _fd.FindElement(By.TagName("paper-input-container")).Click();
+                    if (pasteComment)
+                    {
+                        _fd.FindElement(By.Id("contenteditable-textarea")).SendKeys(Clipboard.GetText());
+                    }
+                    else
+                    {
+                        _fd.FindElement(By.Id("contenteditable-textarea")).SendKeys(comment);
+                    }
+                    _fd.FindElementById("creation-box").FindElement(By.TagName("paper-button")).Click();
+                    Thread.Sleep(int.Parse(b.FindElement(time).Text) * 1000);
+                    _fd.Close();
+                }
+                catch (Exception ex)
+                {
+
+                }
+                _fd.SwitchTo().Window(windows[0]);
+                By agree = By.ClassName("btn");
+
+                try
+                {
+                    var elementClick = b.FindElement(agree);
+                    elementClick.Click();
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+            catch (Exception ex) { };
+
+        }
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            _fd.Navigate().GoToUrl("https://ytuber.ru/work/comment_like");
+            Thread tr = new Thread(() => DoTask(LikeToComment, "comment_like"));
+            tr.Start();
+        }
+        private void LikeToComment(IWebElement b)
+        {
+
+            By ahref = By.TagName("a");
+            var href = b.FindElement(ahref);
+            By imgTag = By.TagName("img");
+            var img = href.FindElement(imgTag);
+            img.Click();
+
+            By time = By.ClassName("time");
+
+            var windows = _fd.WindowHandles.ToList();
+
+            Thread.Sleep(int.Parse(b.FindElement(time).Text) * 1000);
+            try
+            {
+
+                _fd.SwitchTo().Window(windows[1]);
+                _fd.FindElementByTagName("ytd-comment-renderer").FindElement(By.Id("like-button")).Click();
+                _fd.Close();
+            }
+            catch (Exception ex)
+            {
+
+            }
+            _fd.SwitchTo().Window(windows[0]);
+            By agree = By.ClassName("btn");
+
+            try
+            {
+                var elementClick = b.FindElement(agree);
+                elementClick.Click();
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
     }
 }

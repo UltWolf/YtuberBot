@@ -46,17 +46,22 @@ namespace YtuberBot
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             FirefoxDriver driver = new FirefoxDriver();
-            LoginInAccount(driver);
+            Thread thread = new Thread(() => LoginInAccount(driver));
+            thread.Start();
             ManagmentView mv = new ManagmentView(driver);
         }
 
         public void LoginInAccount(FirefoxDriver driver)
-        {
-            driver.Url = "https://ytuber.ru";
+        { 
 
             User user = new User();
-            user.email = Login.Text;
-            user.password = Password.Text;
+            bool GoogleAuthentication = true;
+            Dispatcher.Invoke(() => {
+                user.email = Login.Text;
+                user.password = Password.Text;
+                GoogleAuthentication = (bool)IsGoogle.IsChecked;
+            });
+
             using (FileStream fs = new FileStream("user.data", FileMode.Create))
             {
 
@@ -64,25 +69,32 @@ namespace YtuberBot
             } 
             By formGroup = By.ClassName("form-group");
             By inputTag = By.TagName("input");
+            
 
             driver.Navigate().GoToUrl("https://ytuber.ru/auth/login");
-            if (IsGoogle.IsChecked == true)
+            if (GoogleAuthentication)
             {
 
                 Thread.Sleep(r.Next(4, 10) * 1000);
                 driver.FindElements(formGroup)[3].FindElement(By.TagName("button")).Submit();
-                Thread.Sleep(r.Next(5, 10) * 1000);
-                driver.FindElement(By.Id("identifierId")).SendKeys(Login.Text);
+                Thread.Sleep(r.Next(30, 40) * 1000);
+                Dispatcher.Invoke(() =>
+                {
+                    driver.FindElement(By.Id("identifierId")).SendKeys(Login.Text);
+                });
                 driver.FindElement(By.Id("identifierNext")).Click();
 
-                Thread.Sleep(r.Next(4, 10) * 1000);
+                Thread.Sleep(r.Next(30, 40) * 1000);
                 var inputs = driver.FindElements(inputTag);
 
                 foreach( var i in inputs)
                 {
                     if(i.GetAttribute("name")== "password")
                     {
-                        driver.FindElements(inputTag)[1].SendKeys(Password.Text);
+                        Dispatcher.Invoke(() =>
+                        {
+                            driver.FindElements(inputTag)[1].SendKeys(Password.Text);
+                        });
                         driver.FindElement(By.Id("passwordNext")).Click();
                         Thread.Sleep(r.Next(4, 10) * 1000);
                         break;
@@ -97,9 +109,12 @@ namespace YtuberBot
                 driver.FindElements(formGroup)[1].FindElement(inputTag).SendKeys(Login.Text);
                 driver.FindElements(formGroup)[2].FindElement(inputTag).Submit();
             }
-            ManagmentView mw = new ManagmentView(driver);
-            mw.Show();
-            this.Close();
+            Dispatcher.Invoke(() => {
+                ManagmentView mw = new ManagmentView(driver);
+                mw.Show();
+                this.Close();
+            });
+         
            
         }
     }
