@@ -13,19 +13,17 @@
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="300"></ColumnDefinition>
+            <ColumnDefinition Width="300"></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <Button Content="Watchers" Width="100" Height="40" Grid.Row="0" Grid.Column="0" Click="Button_Click"></Button> 
-        <Button Width="50" Height="40" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" Content="▶" Margin="0,50,59.8,50"></Button>
-        <Button Content="Likes" Width="100" Height="40" Grid.Row="0" Grid.Column="1" Click="Button_Click_1"></Button> 
-        <Button Width="50" Height="40" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Content="▶" Margin="0,50,59.8,50"></Button>
-        <Button Content="Comments" Width="100" Height="40" Grid.Row="1" Grid.Column="0" Click="Button_Click_2" Margin="148,25,148.8,75"  ></Button> 
-        <Button Width="50" Height="40" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" Content="▶" Margin="0,50,59.8,50"></Button>
-        <TextBox Width="100" Height="40" Grid.Row="1" Grid.Column="0" Name="Positive" Margin="10,90,286.8,10"></TextBox>
-        <TextBox Width="100" Height="40" Grid.Row="1" Grid.Column="0" Name="Negative" Margin="149,95,147.8,5"></TextBox>
-        <TextBox Width="100" Height="40" Grid.Row="1" Grid.Column="0" Name="Any" Margin="287,90,9.8,10"></TextBox>
-        <Button Content="LikesToComments" Width="100" Height="40" Grid.Row="1" Grid.Column="1" Click="Button_Click_3" ></Button> 
-        <Button Width="50" Height="40" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" Content="▶" Margin="0,50,59.8,50"></Button>
+        <Button Content="Watchers" Grid.Row="0" Grid.Column="0" Click="Button_Click"  Width="100" Height="40"/>
+        <Button Content="Likes" Grid.Row="0" Grid.Column="1" Click="Button_Click_1" Width="100" Height="40"/>
+        <Button Content="Comments" Grid.Row="1" Grid.Column="0" Click="Button_Click_2" Width="100" Height="40" />
+        <TextBox Grid.Row="1" Grid.Column="0" Name="Positive" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="90" Height="40"/>
+        <TextBox Grid.Row="1" Grid.Column="0" Name="Negative" HorizontalAlignment="Center" VerticalAlignment="Bottom"  Width="90" Height="40"/>
+        <TextBox Grid.Row="1" Grid.Column="0" Name="Any" HorizontalAlignment="Right" VerticalAlignment="Bottom"  Width="90" Height="40"/>
+        <Button Content="LikesToComments" Grid.Row="1" Grid.Column="1" Click="Button_Click_3" Width="100" Height="40" />
+        <Button Width="100" Height="50" Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Content="||"></Button>
     </Grid>
 </Window>
