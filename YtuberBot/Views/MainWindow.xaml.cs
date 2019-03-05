@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 using System.Windows;
+using System.Windows.Media.Animation;
 using YtuberBot.Models;
 using YtuberBot.Views;
 
@@ -33,8 +34,7 @@ namespace YtuberBot
                         user = (User)bf.Deserialize(fs);
                     }
                     Login.Text = user.email;
-                    Password.Text = user.password;
-
+                    Password.Text = user.password; 
                 }
                 catch(Exception ex)
                 {
@@ -45,8 +45,13 @@ namespace YtuberBot
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            FunctionalBlock.Visibility = Visibility.Collapsed;
+            LoadingBlock.Visibility = Visibility.Visible;
             FirefoxDriver driver = new FirefoxDriver(FirefoxDriverService.CreateDefaultService(),new FirefoxOptions(),TimeSpan.FromMinutes(5));
             Thread thread = new Thread(() => LoginInAccount(driver));
+            Storyboard sb = (Storyboard)this.LoadingIcon.FindResource("spin");
+            sb.Begin();
+            sb.SetSpeedRatio(27);
             thread.Start();
             ManagmentView mv = new ManagmentView(driver);
         }
@@ -76,10 +81,16 @@ namespace YtuberBot
             {
 
                 Thread.Sleep(r.Next(4, 10) * 1000);
-                driver.FindElements(formGroup)[3].FindElement(By.TagName("button")).Submit();
-                Thread.Sleep(r.Next(30, 40) * 1000);
                 Dispatcher.Invoke(() =>
                 {
+                    LoadingText.Content = "Login to Google Account";
+                });
+                driver.FindElements(formGroup)[3].FindElement(By.TagName("button")).Submit();
+                Thread.Sleep(r.Next(30, 40) * 1000);
+                
+                Dispatcher.Invoke(() =>
+                {
+                    LoadingText.Content = "Input login element";
                     driver.FindElement(By.Id("identifierId")).SendKeys(Login.Text);
                 });
                 driver.FindElement(By.Id("identifierNext")).Click();
@@ -93,6 +104,7 @@ namespace YtuberBot
                     {
                         Dispatcher.Invoke(() =>
                         {
+                            LoadingText.Content = "Input password element";
                             driver.FindElements(inputTag)[1].SendKeys(Password.Text);
                         });
                         driver.FindElement(By.Id("passwordNext")).Click();
@@ -109,7 +121,11 @@ namespace YtuberBot
                 driver.FindElements(formGroup)[1].FindElement(inputTag).SendKeys(Login.Text);
                 driver.FindElements(formGroup)[2].FindElement(inputTag).Submit();
             }
-            Dispatcher.Invoke(() => {
+            Dispatcher.Invoke(() =>
+            {
+                LoadingText.Content = "Final element";
+            });
+                Dispatcher.Invoke(() => {
                 ManagmentView mw = new ManagmentView(driver);
                 mw.Show();
                 this.Close();
