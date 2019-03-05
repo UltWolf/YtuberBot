@@ -24,8 +24,10 @@ namespace YtuberBot.Views
     {
         private readonly FirefoxDriver _fd;
         private readonly Random r = new Random();
+        CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
+        CancellationToken token;
         private string LikeValue = "";
-        Thread tr ;
+        Task task;
 
         public ManagmentView(FirefoxDriver fd)
         {
@@ -34,12 +36,23 @@ namespace YtuberBot.Views
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
-        { 
+        {
+            FunctionalBlock.Visibility = Visibility.Collapsed;
+            StopBlock.Visibility = Visibility.Visible;
+            Task task = new Task(()=>Navigate());
+            task.Start();
+            
+           
+           
+        }
+        private void Navigate()
+        {
             _fd.Navigate().GoToUrl("https://ytuber.ru/work/view");
-            tr = new Thread(() => DoTask(Watch, "view"));
-            tr.Name = "";
-            tr.Start();
-            tr.Abort();
+            Task task = new Task(() => DoTask(Watch, "View"));
+
+            token = cancelTokenSource.Token;
+
+            task.Start();
         }
         public void DoTask(Action<IWebElement> action,string taskUrl)
         {  
@@ -54,6 +67,12 @@ namespace YtuberBot.Views
                 if (b.GetAttribute("class") != "success")
                 {
                     action.Invoke(b);
+                    if (token.IsCancellationRequested)
+                    {
+                        FunctionalBlock.Visibility = Visibility.Visible;
+                        StopBlock.Visibility = Visibility.Collapsed;
+                        return;
+                    }
                     Thread.Sleep(r.Next(1, 10) * 1000);
                 }
             }
@@ -160,15 +179,19 @@ namespace YtuberBot.Views
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             _fd.Navigate().GoToUrl("https://ytuber.ru/work/like");
-            Thread tr = new Thread(() => DoTask(Like,"like"));
-            tr.Start();
+            task = new Task(() => DoTask(Like,"like"));
+            FunctionalBlock.Visibility = Visibility.Collapsed;
+            StopBlock.Visibility = Visibility.Visible;
+            task.Start();
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
             _fd.Navigate().GoToUrl("https://ytuber.ru/work/comment");
-            Thread tr = new Thread(() => DoTask(Comment, "comment"));
-            tr.Start();
+            task = new Task(() => DoTask(Comment, "comment"));
+            FunctionalBlock.Visibility = Visibility.Collapsed;
+            StopBlock.Visibility = Visibility.Visible;
+            task.Start();
 
         }
         private void Comment(IWebElement b)
@@ -254,8 +277,10 @@ namespace YtuberBot.Views
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
             _fd.Navigate().GoToUrl("https://ytuber.ru/work/comment_like");
-            Thread tr = new Thread(() => DoTask(LikeToComment, "comment_like"));
-            tr.Start();
+            task = new Task(() => DoTask(LikeToComment, "comment_like"));
+            FunctionalBlock.Visibility = Visibility.Collapsed;
+            StopBlock.Visibility = Visibility.Visible;
+            task.Start();
         }
         private void LikeToComment(IWebElement b)
         {
@@ -294,6 +319,11 @@ namespace YtuberBot.Views
             {
 
             }
+        }
+
+        private void Button_Click_4(object sender, RoutedEventArgs e)
+        {
+            cancelTokenSource.Cancel();
         }
     }
 }

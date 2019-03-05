@@ -45,7 +45,7 @@ namespace YtuberBot
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            FirefoxDriver driver = new FirefoxDriver();
+            FirefoxDriver driver = new FirefoxDriver(FirefoxDriverService.CreateDefaultService(),new FirefoxOptions(),TimeSpan.FromMinutes(5));
             Thread thread = new Thread(() => LoginInAccount(driver));
             thread.Start();
             ManagmentView mv = new ManagmentView(driver);
@@ -71,7 +71,7 @@ namespace YtuberBot
             By inputTag = By.TagName("input");
             
 
-            driver.Navigate().GoToUrl("https://ytuber.ru/auth/login");
+            driver.Navigate().GoToUrl("https://ytuber.ru/auth/login");  
             if (GoogleAuthentication)
             {
 
