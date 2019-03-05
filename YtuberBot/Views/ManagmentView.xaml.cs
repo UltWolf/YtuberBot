@@ -69,8 +69,12 @@ namespace YtuberBot.Views
                     action.Invoke(b);
                     if (token.IsCancellationRequested)
                     {
-                        FunctionalBlock.Visibility = Visibility.Visible;
-                        StopBlock.Visibility = Visibility.Collapsed;
+                        Dispatcher.Invoke(() =>
+                        {
+                            FunctionalBlock.Visibility = Visibility.Visible;
+                            StopBlock.Visibility = Visibility.Collapsed;
+
+                        });
                         return;
                     }
                     Thread.Sleep(r.Next(1, 10) * 1000);
