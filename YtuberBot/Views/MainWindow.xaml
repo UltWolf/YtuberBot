@@ -12,8 +12,11 @@
             <RowDefinition></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
+        <Label Content="Login" VerticalAlignment="Top" Grid.Row="0" HorizontalAlignment="Center"></Label>
         <TextBox    Width="200" Height="50" Grid.Row="0" Name="Login"/>
+        <Label Content="Password" VerticalAlignment="Top" Grid.Row="1" HorizontalAlignment="Center"></Label>
         <TextBox Width="200" Height="50" Grid.Row="1" Name="Password"></TextBox>
+        <Label Content="Login with GMAIL" Width="120" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,27,176.6,88"></Label>
         <CheckBox Width="30" Height="30" Grid.Row="1" Margin="540,65,223.6,45" Name="IsGoogle"></CheckBox>
         <Button Content="start" Click="Button_Click" Width="200" Height="50" Grid.Row="2"></Button>
     </Grid>
