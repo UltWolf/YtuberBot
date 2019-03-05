@@ -28,7 +28,7 @@
             <CheckBox Width="30" Height="30" Grid.Row="1" Margin="587,27.2,176.6,47.6" Name="IsGoogle" Background="#FFEE0D0D"></CheckBox>
             <Button Content="start" Click="Button_Click" Width="200" Height="50" Grid.Row="2"></Button>
         </Grid>
-        <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Grid.RowSpan="3" Name="LoadingBlock" Visibility="Visible">
+        <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Grid.RowSpan="3" Name="LoadingBlock" Visibility="Hidden">
 
 
             <Image   Opacity="100" Name="LoadingIcon" Width="200" Height="200" VerticalAlignment="Top"  RenderTransformOrigin="0.5,0.5" Source="/YtuberBot;component/src/Loading.png" Margin="299,85,294.6,0"  >
