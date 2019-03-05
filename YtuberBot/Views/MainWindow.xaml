@@ -12,7 +12,7 @@
             <RowDefinition></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <Grid   Grid.Row="0" Grid.RowSpan="3" Name="FunctionalBlock" Visibility="Collapsed">
+        <Grid   Grid.Row="0" Grid.RowSpan="3" Name="FunctionalBlock" Visibility="Visible">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
@@ -28,7 +28,7 @@
             <CheckBox Width="30" Height="30" Grid.Row="1" Margin="540,65,223.6,45" Name="IsGoogle"></CheckBox>
             <Button Content="start" Click="Button_Click" Width="200" Height="50" Grid.Row="2"></Button>
         </Grid>
-        <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Grid.RowSpan="3" Name="LoadingBlock" Visibility="Visible">
+        <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Grid.RowSpan="3" Name="LoadingBlock" Visibility="Collapsed">
 
 
             <Image   Opacity="100" Name="LoadingIcon" Width="200" Height="200" VerticalAlignment="Top"  RenderTransformOrigin="0.5,0.5" Source="/YtuberBot;component/src/Loading.png" Margin="299,85,294.6,0"  >
