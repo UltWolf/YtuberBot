@@ -125,13 +125,22 @@ namespace YtuberBot
             {
                 LoadingText.Content = "Final element";
             });
-            
-                Dispatcher.Invoke(() => {
-                ManagmentView mw = new ManagmentView(driver);
-                mw.Show();
-                this.Close();
-            });
-         
+
+            Thread.Sleep(1000);
+            if (driver.Url != "https://ytuber.ru/dashboard") {
+                MessageBox.Show("We got error, login or password are wrongs.");
+                FunctionalBlock.Visibility = Visibility.Visible;
+                LoadingBlock.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    ManagmentView mw = new ManagmentView(driver);
+                    mw.Show();
+                    this.Close();
+                });
+            }         
            
         }
     }
