@@ -49,7 +49,7 @@ namespace YtuberBot.Views
         private void Navigate()
         {
             _fd.Navigate().GoToUrl("https://ytuber.ru/work/view");
-            Task task = new Task(() => DoTask(Watch, "View"));
+            Task task = new Task(() => DoTask(Watch, "View"),token);
 
             token = cancelTokenSource.Token;
 
@@ -72,13 +72,14 @@ namespace YtuberBot.Views
                     if (token.IsCancellationRequested)
                     {
                         Dispatcher.Invoke(() =>
-                        {
+                        {  TaskTime.Content = "Please wait, we are prepared to starting...";
                             FunctionalBlock.Visibility = Visibility.Visible;
                             StopBlock.Visibility = Visibility.Collapsed;
 
                         });
                         return;
                     }
+                    index++;
                     Thread.Sleep(r.Next(1, 10) * 1000);
                 }
             }
@@ -206,7 +207,7 @@ namespace YtuberBot.Views
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             _fd.Navigate().GoToUrl("https://ytuber.ru/work/like");
-            task = new Task(() => DoTask(Like, "like"));
+            task = new Task(() => DoTask(Like, "like"),token);
             FunctionalBlock.Visibility = Visibility.Collapsed;
             StopBlock.Visibility = Visibility.Visible;
             task.Start();
@@ -215,7 +216,7 @@ namespace YtuberBot.Views
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
             _fd.Navigate().GoToUrl("https://ytuber.ru/work/comment");
-            task = new Task(() => DoTask(Comment, "comment"));
+            task = new Task(() => DoTask(Comment, "comment"),token);
             FunctionalBlock.Visibility = Visibility.Collapsed;
             StopBlock.Visibility = Visibility.Visible;
             task.Start();
@@ -304,7 +305,7 @@ namespace YtuberBot.Views
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
             _fd.Navigate().GoToUrl("https://ytuber.ru/work/comment_like");
-            task = new Task(() => DoTask(LikeToComment, "comment_like"));
+            task = new Task(() => DoTask(LikeToComment, "comment_like"),token);
             FunctionalBlock.Visibility = Visibility.Collapsed;
             StopBlock.Visibility = Visibility.Visible;
             task.Start();
@@ -350,8 +351,10 @@ namespace YtuberBot.Views
 
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
-            index = 0;
+         
             cancelTokenSource.Cancel();
+            index = 0;
+            
         }
     }
 }

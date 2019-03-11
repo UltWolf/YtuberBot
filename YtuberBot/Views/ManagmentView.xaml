@@ -18,7 +18,7 @@
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0"  Grid.ColumnSpan="2" Grid.RowSpan="2" Grid.Row="0" Name="StopBlock" Visibility="Collapsed">
-            <Label HorizontalAlignment="Center" VerticalAlignment="Center" Content="Task" Name="TaskTime"></Label>
+            <Label HorizontalAlignment="Center" VerticalAlignment="Center" Content="Please wait, we are prepared to starting..." Name="TaskTime"></Label>
             <Button Width="100" Height="50" Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Bottom" Content="||" Click="Button_Click_4"></Button>
         </Grid>
         <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Grid.RowSpan="3" Name="FunctionalBlock" >
