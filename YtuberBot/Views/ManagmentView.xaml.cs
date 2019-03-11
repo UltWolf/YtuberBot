@@ -28,6 +28,7 @@ namespace YtuberBot.Views
         CancellationToken token;
         private string LikeValue = "";
         Task task;
+        private int index = 0;
 
         public ManagmentView(FirefoxDriver fd)
         {
@@ -39,11 +40,11 @@ namespace YtuberBot.Views
         {
             FunctionalBlock.Visibility = Visibility.Collapsed;
             StopBlock.Visibility = Visibility.Visible;
-            Task task = new Task(()=>Navigate());
+            Task task = new Task(() => Navigate());
             task.Start();
-            
-           
-           
+
+
+
         }
         private void Navigate()
         {
@@ -54,18 +55,19 @@ namespace YtuberBot.Views
 
             task.Start();
         }
-        public void DoTask(Action<IWebElement> action,string taskUrl)
-        {  
-            Thread.Sleep(r.Next(1, 10) * 1000); 
+        public void DoTask(Action<IWebElement> action, string taskUrl)
+        {
+            Thread.Sleep(r.Next(1, 10) * 1000);
             By className = By.ClassName("table-responsive");
             var tables = _fd.FindElement(className);
             By tbody = By.TagName("tbody");
             var body = tables.FindElement(tbody);
             foreach (var b in body.FindElements(By.TagName("tr")))
             {
-                
+
                 if (b.GetAttribute("class") != "success")
                 {
+
                     action.Invoke(b);
                     if (token.IsCancellationRequested)
                     {
@@ -92,37 +94,48 @@ namespace YtuberBot.Views
             }
             catch (FormatException fx)
             {
-                _fd.Navigate().GoToUrl("https://ytuber.ru/work/"+taskUrl+"/12");
+                _fd.Navigate().GoToUrl("https://ytuber.ru/work/" + taskUrl + "/12");
             }
-            DoTask(action,taskUrl);
+            DoTask(action, taskUrl);
         }
-         public void Like(IWebElement b)
+        public void Like(IWebElement b)
         {
             By ahref = By.TagName("a");
             var href = b.FindElement(ahref);
             By imgTag = By.TagName("img");
             var img = href.FindElement(imgTag);
             var typeLike = b.FindElements(By.TagName("td"))[4].FindElement(By.TagName("span")).Text;
-            img.Click(); 
-            By time = By.ClassName("time"); 
-            var windows = _fd.WindowHandles.ToList(); 
-            Thread.Sleep(int.Parse(b.FindElement(time).Text) * 1000);
+            img.Click();
+            By time = By.ClassName("time");
+            var windows = _fd.WindowHandles.ToList();
+            int timeClock = (int.Parse(b.FindElement(time).Text));
+            while (timeClock > 0)
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    TaskTime.Content = "Task:" + index + "|Ended after: " + timeClock + "s.";
+                }
+                    );
+
+                Thread.Sleep(1000);
+                timeClock--;
+            }
             try
             {
 
-                _fd.SwitchTo().Window(windows[1]); 
-                
-            var buttonPanel =  _fd.FindElementById("top-level-buttons");
-            var buttons =  buttonPanel.FindElements(By.TagName("ytd-toggle-button-renderer"));
-           
-            if ( typeLike=="Лайк")
-            {
-                buttons[0].Click();
-            }
-            else
-            {
-                buttons[1].Click();
-            }
+                _fd.SwitchTo().Window(windows[1]);
+
+                var buttonPanel = _fd.FindElementById("top-level-buttons");
+                var buttons = buttonPanel.FindElements(By.TagName("ytd-toggle-button-renderer"));
+
+                if (typeLike == "Лайк")
+                {
+                    buttons[0].Click();
+                }
+                else
+                {
+                    buttons[1].Click();
+                }
                 _fd.Close();
             }
             catch (Exception ex)
@@ -154,12 +167,22 @@ namespace YtuberBot.Views
             By time = By.ClassName("time");
 
             var windows = _fd.WindowHandles.ToList();
-            
-            Thread.Sleep(int.Parse(b.FindElement(time).Text) * 1000);
+            int timeClock = (int.Parse(b.FindElement(time).Text));
+            while (timeClock > 0)
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    TaskTime.Content = "Task:" + index + "|Ended after: " + timeClock + "s.";
+                }
+                    );
+
+                Thread.Sleep(1000);
+                timeClock--;
+            }
             try
             {
 
-                _fd.SwitchTo().Window(windows[1]); 
+                _fd.SwitchTo().Window(windows[1]);
                 _fd.Close();
             }
             catch (Exception ex)
@@ -183,7 +206,7 @@ namespace YtuberBot.Views
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             _fd.Navigate().GoToUrl("https://ytuber.ru/work/like");
-            task = new Task(() => DoTask(Like,"like"));
+            task = new Task(() => DoTask(Like, "like"));
             FunctionalBlock.Visibility = Visibility.Collapsed;
             StopBlock.Visibility = Visibility.Visible;
             task.Start();
@@ -327,6 +350,7 @@ namespace YtuberBot.Views
 
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
+            index = 0;
             cancelTokenSource.Cancel();
         }
     }

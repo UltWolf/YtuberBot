@@ -125,6 +125,7 @@ namespace YtuberBot
             {
                 LoadingText.Content = "Final element";
             });
+            
                 Dispatcher.Invoke(() => {
                 ManagmentView mw = new ManagmentView(driver);
                 mw.Show();
